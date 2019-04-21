@@ -2,11 +2,13 @@ extends layout
 
 block content
   h1 Employees
-  table(class='table')
-    thead
-      tr
-        th Last Name
-        th First Name
-        th Title
-    tbody(id='employees')
-  div(id='error', class='error', style='display: none')
+  +spinner('busy-indicator')
+  div(id='employees-container' class='hide')
+    table(class='table')
+      thead
+        tr
+          th Last Name
+          th First Name
+          th Title
+      tbody(id='employees-table-body')
+  div(id='error', class='error hide')

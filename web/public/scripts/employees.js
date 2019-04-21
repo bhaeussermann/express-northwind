@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     return element;
   };
   
-  const employeesTable = document.getElementById('employees');
+  const employeesTable = document.getElementById('employees-table-body');
   employees.forEach(e => {
     const listItem = document.createElement('tr');
     listItem.appendChild(createTableDataElement(e.lastName));
@@ -34,4 +34,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     listItem.appendChild(createTableDataElement(e.title));
     employeesTable.appendChild(listItem);
   });
+
+  document.getElementById('busy-indicator').style = 'display: none';
+  document.getElementById('employees-container').style = 'display: block';
 });
