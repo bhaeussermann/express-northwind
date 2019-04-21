@@ -3,7 +3,7 @@ var request = require('request');
 var router = express.Router();
 
 router.get('/', function(req, res, next) {
-  res.render('employees', { name: 'employees', title: 'Employees' });
+  res.render('employees', { name: 'employees', title: 'Employees', pretty: true });
 });
 
 router.get('/api/*', function(req, res) {

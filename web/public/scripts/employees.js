@@ -3,20 +3,14 @@ import { timeout, parseResponseAsJson } from './common.js';
 'use strict';
 
 document.addEventListener('DOMContentLoaded', async function() {
+  var employees;
   const controller = new AbortController();
   try {
-    const employees = 
+    employees = 
       await timeout(
         parseResponseAsJson(
           fetch('api/northwind/employees', { signal: controller.signal })
-        ), 5000);
-    
-    const employeesList = document.getElementById('employees');
-    employees.forEach(e => {
-      const listItem = document.createElement('li');
-      listItem.appendChild(document.createTextNode(`${e.firstName} ${e.lastName}`));
-      employeesList.appendChild(listItem);
-    });
+        ), 5000);  
   }
   catch (error) {
     controller.abort();
@@ -25,4 +19,19 @@ document.addEventListener('DOMContentLoaded', async function() {
     errorElement.style = 'display: block';
     throw error;
   }
+
+  const createTableDataElement = function(text) {
+    const element = document.createElement('td');
+    element.appendChild(document.createTextNode(text));
+    return element;
+  };
+  
+  const employeesTable = document.getElementById('employees');
+  employees.forEach(e => {
+    const listItem = document.createElement('tr');
+    listItem.appendChild(createTableDataElement(e.lastName));
+    listItem.appendChild(createTableDataElement(e.firstName));
+    listItem.appendChild(createTableDataElement(e.title));
+    employeesTable.appendChild(listItem);
+  });
 });

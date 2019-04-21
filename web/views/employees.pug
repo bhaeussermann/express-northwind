@@ -1,5 +1,12 @@
 extends layout
 
 block content
-  ul(id='employees')
+  h1 Employees
+  table(class='table')
+    thead
+      tr
+        th Last Name
+        th First Name
+        th Title
+    tbody(id='employees')
   div(id='error', class='error', style='display: none')
