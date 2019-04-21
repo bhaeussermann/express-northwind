@@ -3,7 +3,8 @@ html
   head
     title= title
     link(rel='stylesheet', href='/styles/style.css')
-    script(src=`/scripts/${name}.js`)
+    script(type="module" src=`/scripts/common.js`)
+    script(type="module" src=`/scripts/${name}.js`)
   body
     h1= title
     block content
