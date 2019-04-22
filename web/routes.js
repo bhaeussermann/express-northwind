@@ -8,7 +8,10 @@ router.get('/', function(req, res, next) {
 
 router.get('/api/*', function(req, res) {
   request('http://23.96.23.19:8030' + req.url.substring(4), function(error, response, body) {
-    res.status(response.statusCode).send(body);
+    if (error)
+      res.status(500).send({ message: 'Error calling Northwind service: ' + error.code });
+    else
+      res.status(response.statusCode).send(body);
   });
 });
 

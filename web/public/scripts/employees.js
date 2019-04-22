@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       await timeout(
         parseResponseAsJson(
           fetch('api/northwind/employees', { signal: controller.signal })
-        ), 5000);  
+        ), 5000);
   }
   catch (error) {
     controller.abort();
@@ -18,6 +18,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     errorElement.textContent = 'Error loading employees: ' + error.message
     errorElement.style = 'display: block';
     throw error;
+  }
+  finally {
+    document.getElementById('busy-indicator').style = 'display: none';
   }
 
   const createTableDataElement = function(text) {
@@ -35,6 +38,5 @@ document.addEventListener('DOMContentLoaded', async function() {
     employeesTable.appendChild(listItem);
   });
 
-  document.getElementById('busy-indicator').style = 'display: none';
   document.getElementById('employees-container').style = 'display: block';
 });
