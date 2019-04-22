@@ -2,6 +2,7 @@ extends layout
 
 block content
   h1 Employees
+    input(id='search-input', class='form-control search', placeholder='Search', type='text')
   +spinner('busy-indicator')
   div(id='employees-container' class='hide')
     table(class='table')
@@ -11,4 +12,5 @@ block content
           th First Name
           th Title
       tbody(id='employees-table-body')
+  div(id='no-results', class='hide') No results to show.
   div(id='error', class='error hide')

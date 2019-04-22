@@ -10,6 +10,13 @@
   color: red;
 }
 
+.search {
+  margin: 8px 0;
+  border-radius: 0.7rem;
+  float: right;
+  width: 350px;
+}
+
 .spinner {
   display: block;
   position: relative;
