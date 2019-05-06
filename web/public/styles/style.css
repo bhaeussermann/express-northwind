@@ -146,3 +146,26 @@
   -webkit-transform: rotate(45deg);
   transform: rotate(45deg);
 }
+
+.icon-tooltip {
+  position: relative;
+  display: inline-block;
+  margin: 0 5px;
+}
+
+.icon-tooltip .icon-tooltip-text {
+  visibility: hidden;
+  position: absolute;
+  z-index: 1;
+  margin: 0 5px;
+  padding: 0 2px;
+  min-width: 100px;
+  border-radius: 3px;
+  background-color: black;
+  color: white;
+  font-size: 0.8em;
+}
+
+.icon-tooltip:hover .icon-tooltip-text {
+  visibility: visible;
+}

@@ -1,4 +1,4 @@
-import { timeout, parseResponseAsJson } from './common.js';
+import { timeout, resolveResponse, parseResponseAsJson } from './common.js';
 
 'use strict';
 
@@ -42,6 +42,7 @@ function registerEventListeners() {
 }
 
 async function loadEmployees() {
+  document.getElementById('busy-indicator').style = 'display: block';
   const controller = new AbortController();
   try {
     employees = 
@@ -95,11 +96,17 @@ function refreshEmployees() {
     while (employeesTable.lastChild)
       employeesTable.removeChild(employeesTable.lastChild);
 
+    const deleteClicked = async function() {
+      const employee = JSON.parse(this.getAttribute('data-data'));
+      await deleteEmployee(employee);
+    };
+    
     filteredEmployees.forEach(e => {
       const listItem = document.createElement('tr');
-      listItem.appendChild(createTableDataElement(e.lastName));
-      listItem.appendChild(createTableDataElement(e.firstName));
-      listItem.appendChild(createTableDataElement(e.title));
+      listItem.appendChild(createTableDataTextElement(e.lastName));
+      listItem.appendChild(createTableDataTextElement(e.firstName));
+      listItem.appendChild(createTableDataTextElement(e.title));
+      listItem.appendChild(createTableDataLinkElement('Delete', e, deleteClicked, 'delete'));
       employeesTable.appendChild(listItem);
     });
 
@@ -112,8 +119,71 @@ function refreshEmployees() {
   }
 }
 
-function createTableDataElement(text) {
+async function deleteEmployee(employee) {
+  if (confirm(`Delete ${employee.firstName} ${employee.lastName}?`)) {
+    const busyIndicator = document.getElementById('delete-busy-' + employee.id);
+    busyIndicator.style = 'display: inline-block; margin-left: 10px;';
+    const controller = new AbortController();
+    try {
+      await timeout(
+        resolveResponse(
+          fetch('api/northwind/employees/' + employee.id, { method: 'delete', signal: controller.signal })
+        ), 5000);
+    }
+    catch (error) {
+      controller.abort();
+      document.getElementById('delete-error-' + employee.id).style = 'dislay: inline-block';
+      document.getElementById(`delete-error-${employee.id}-message`).innerText = error.message;
+      throw error;
+    }
+    finally {
+      busyIndicator.style = 'display: none';
+    }
+
+    await loadEmployees();
+  }
+}
+
+function createTableDataTextElement(text) {
   const element = document.createElement('td');
   element.appendChild(document.createTextNode(text));
   return element;
 };
+
+function createTableDataLinkElement(text, data, clickAction, idPrefix) {
+  const divElement = document.createElement('div');
+
+  const linkElement = document.createElement('a');
+  linkElement.setAttribute('href', '#');
+  linkElement.setAttribute('data-data', JSON.stringify(data));
+  linkElement.appendChild(document.createTextNode(text));
+  linkElement.addEventListener('click', clickAction);
+  divElement.appendChild(linkElement);
+
+  if (idPrefix) {
+    const spinnerElement = document.createElement('div');
+    spinnerElement.style = 'display: none; margin-left: 10px;';
+    spinnerElement.id = idPrefix + '-busy-' + data.id;
+    spinnerElement.className = 'spinner inline-spinner';
+    for (var i = 0; i < 12; i++)
+      spinnerElement.appendChild(document.createElement('div'));
+    divElement.appendChild(spinnerElement);
+
+    const errorElement = document.createElement('span');
+    errorElement.style = 'display: none';
+    errorElement.id = idPrefix + '-error-' + data.id;
+    errorElement.className = 'icon-tooltip';
+    const errorIcon = document.createElement('i');
+    errorIcon.setAttribute('class', 'fa fa-exclamation-circle');
+    errorElement.appendChild(errorIcon);
+    const errorMessageElement = document.createElement('span');
+    errorMessageElement.id = errorElement.id + '-message';
+    errorMessageElement.className = 'icon-tooltip-text';
+    errorElement.appendChild(errorMessageElement);
+    divElement.appendChild(errorElement);
+  }
+
+  const element = document.createElement('td');
+  element.appendChild(divElement);
+  return element;
+}

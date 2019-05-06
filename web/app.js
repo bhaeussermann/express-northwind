@@ -20,6 +20,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', router);
 app.use('/styles', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')));
+app.use('/styles', express.static(path.join(__dirname, 'node_modules/font-awesome/css')));
+app.use('/fonts', express.static(path.join(__dirname, 'node_modules/font-awesome/fonts')));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
