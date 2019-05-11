@@ -6,6 +6,18 @@
   display: none;
 }
 
+.btn {
+  margin: 5px;
+}
+
+label {
+  margin: 5px;
+}
+
+.layout-table td {
+  padding-top: 10px;
+}
+
 .error {
   color: red;
 }

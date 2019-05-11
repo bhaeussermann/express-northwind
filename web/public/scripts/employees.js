@@ -1,6 +1,6 @@
-import { timeout, resolveResponse, parseResponseAsJson } from './common.js';
-
 'use strict';
+
+import { timeout, resolveResponse, parseResponseAsJson } from './common.js';
 
 const SortDirectionEnum = Object.freeze({ ascending: 0, descending: 1 });
 
@@ -14,25 +14,27 @@ document.addEventListener('DOMContentLoaded', async function() {
 });
 
 function registerEventListeners() {
+  document.getElementById('add-button').addEventListener('click', addEmployee);
+
   document.getElementById('search-input').addEventListener('input', refreshEmployees);
   
   const sortableColumns = document.getElementsByClassName('sortable');
   for (var columnIndex = 0; columnIndex < sortableColumns.length; columnIndex++) {
     const sortableColumn = sortableColumns[columnIndex];
     sortableColumn.addEventListener('click', function() {
-      const previousSortedColumn = document.getElementById(sortedField + 'Column')
+      const previousSortedColumn = document.getElementById(sortedField + '-column')
       previousSortedColumn.classList.remove('sort-arrow');
       previousSortedColumn.classList.remove('up');
       previousSortedColumn.classList.remove('down');
 
-      const newSortedField = this.id.replace('Column', '');
+      const newSortedField = this.id.replace('-column', '');
       if (sortedField === newSortedField)
         sortDirection = sortDirection === SortDirectionEnum.ascending ? SortDirectionEnum.descending : SortDirectionEnum.ascending;
       else
         sortDirection = SortDirectionEnum.ascending;
 
       sortedField = newSortedField;
-      const sortedColumn = document.getElementById(sortedField + 'Column')
+      const sortedColumn = document.getElementById(sortedField + '-column')
       sortedColumn.classList.add('sort-arrow');
       sortedColumn.classList.add(sortDirection === SortDirectionEnum.ascending ? 'up' : 'down');
 
@@ -48,7 +50,7 @@ async function loadEmployees() {
     employees = 
       await timeout(
         parseResponseAsJson(
-          fetch('api/northwind/employees', { signal: controller.signal })
+          fetch('/api/northwind/employees', { signal: controller.signal })
         ), 5000);
   }
   catch (error) {
@@ -86,7 +88,7 @@ function refreshEmployees() {
   }
 
   filteredEmployees.sort((e1, e2) => {
-    const compare = e1[sortedField] < e2[sortedField] ? -1 : 1;
+    const compare = e1[sortedField].toLowerCase() < e2[sortedField].toLowerCase() ? -1 : 1;
     return sortDirection === SortDirectionEnum.ascending ? compare : -compare;
   });
 
@@ -95,7 +97,7 @@ function refreshEmployees() {
   if (filteredEmployees.length) {
     while (employeesTable.lastChild)
       employeesTable.removeChild(employeesTable.lastChild);
-
+      
     const deleteClicked = async function() {
       const employee = JSON.parse(this.getAttribute('data-data'));
       await deleteEmployee(employee);
@@ -119,6 +121,13 @@ function refreshEmployees() {
   }
 }
 
+function addEmployee() {
+  var currentLocation = window.location.href;
+  while ((currentLocation[currentLocation.length - 1] === '#') || (currentLocation[currentLocation.length - 1] === '/'))
+    currentLocation = currentLocation.substring(0, currentLocation.length - 1);
+  window.location = currentLocation + '/add';
+}
+
 async function deleteEmployee(employee) {
   if (confirm(`Delete ${employee.firstName} ${employee.lastName}?`)) {
     const busyIndicator = document.getElementById('delete-busy-' + employee.id);
@@ -127,7 +136,7 @@ async function deleteEmployee(employee) {
     try {
       await timeout(
         resolveResponse(
-          fetch('api/northwind/employees/' + employee.id, { method: 'delete', signal: controller.signal })
+          fetch('/api/northwind/employees/' + employee.id, { method: 'delete', signal: controller.signal })
         ), 5000);
     }
     catch (error) {

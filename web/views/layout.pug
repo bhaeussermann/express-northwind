@@ -1,5 +1,5 @@
-mixin spinner(id)
-  div(id=id, class='spinner')
+mixin spinner(id, isInline = false, isHidden = false)
+  div(id=id, class='spinner ' + (isInline ? 'inline-spinner' : ''), style = isHidden ? 'display: none' : '')
     -for (var i = 0; i < 12; i++) {
     div
     - }

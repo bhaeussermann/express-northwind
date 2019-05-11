@@ -1,0 +1,32 @@
+extends layout
+
+block content
+  h1 Add Employee
+  form(id='form', onsubmit='return false')
+    table(class='layout-table')
+      tbody
+        tr
+          td
+            label(for='first-name') First name:
+          td
+            input(id='first-name', class='form-control', type='text', required='required', autofocus)
+        tr
+          td
+            label(for='last-name') Last name:
+          td
+            input(id='last-name', class='form-control', type='text', required='required')
+        tr
+          td
+            label(for='title') Title:
+          td
+            input(id='title', class='form-control', type='text', required='required')
+        tr
+          td
+            label(for='birth-date') Birth Date:
+          td
+            input(id='birth-date', class='form-control', type='date')
+    div
+      input(id='save-button', class='btn btn-primary', type='submit', value='Save')
+      +spinner('save-indicator', true, true)
+      button(id='cancel-button', class='btn btn-secondary', type='button') Cancel
+  div(id='error', class='error hide')

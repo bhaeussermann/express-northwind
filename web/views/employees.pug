@@ -5,12 +5,13 @@ block content
     input(id='search-input', class='form-control search', placeholder='Search', type='text')
   +spinner('busy-indicator')
   div(id='employees-container' class='hide')
+    button(id='add-button', class='btn btn-primary') Add
     table(class='table')
       thead
         tr
-          th(id='lastNameColumn', class='sortable sort-arrow up') Last Name
-          th(id='firstNameColumn', class='sortable') First Name
-          th(id='titleColumn', class='sortable') Title
+          th(id='lastName-column', class='sortable sort-arrow up') Last Name
+          th(id='firstName-column', class='sortable') First Name
+          th(id='title-column', class='sortable') Title
           th
       tbody(id='employees-table-body')
   div(id='no-results', class='hide') No results to show.
