@@ -97,7 +97,12 @@ function refreshEmployees() {
   if (filteredEmployees.length) {
     while (employeesTable.lastChild)
       employeesTable.removeChild(employeesTable.lastChild);
-      
+    
+    const editClicked = function() {
+      const employeeId = JSON.parse(this.getAttribute('data-data'));
+      navigate(employeeId);
+    };
+
     const deleteClicked = async function() {
       const employee = JSON.parse(this.getAttribute('data-data'));
       await deleteEmployee(employee);
@@ -108,6 +113,7 @@ function refreshEmployees() {
       listItem.appendChild(createTableDataTextElement(e.lastName));
       listItem.appendChild(createTableDataTextElement(e.firstName));
       listItem.appendChild(createTableDataTextElement(e.title));
+      listItem.appendChild(createTableDataLinkElement('Edit', e.id, editClicked));
       listItem.appendChild(createTableDataLinkElement('Delete', e, deleteClicked, 'delete'));
       employeesTable.appendChild(listItem);
     });
@@ -122,10 +128,7 @@ function refreshEmployees() {
 }
 
 function addEmployee() {
-  var currentLocation = window.location.href;
-  while ((currentLocation[currentLocation.length - 1] === '#') || (currentLocation[currentLocation.length - 1] === '/'))
-    currentLocation = currentLocation.substring(0, currentLocation.length - 1);
-  window.location = currentLocation + '/add';
+  navigate('add');
 }
 
 async function deleteEmployee(employee) {
@@ -151,6 +154,13 @@ async function deleteEmployee(employee) {
 
     await loadEmployees();
   }
+}
+
+function navigate(relativePath) {
+  var currentLocation = window.location.href;
+  while ((currentLocation[currentLocation.length - 1] === '#') || (currentLocation[currentLocation.length - 1] === '/'))
+    currentLocation = currentLocation.substring(0, currentLocation.length - 1);
+  window.location = `${currentLocation}/${relativePath}`;
 }
 
 function createTableDataTextElement(text) {

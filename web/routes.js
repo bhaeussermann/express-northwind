@@ -14,11 +14,15 @@ router.get('/employees/add', function(req, res, next) {
   res.render('edit-employee', { name: 'edit-employee', title: 'Add Employee', pretty: true });
 });
 
+router.get('/employees/*', function(req, res, next) {
+  res.render('edit-employee', { name: 'edit-employee', title: 'Edit Employee', pretty: true });
+});
+
 router.all('/api/*', function(req, res) {
   request('http://23.96.23.19:8030' + req.url.substring(4), 
     { 
       method: req.method, 
-      body: req.method === 'POST' ? JSON.stringify(req.body) : null
+      body: (req.method === 'POST' || req.method === 'PUT') ? JSON.stringify(req.body) : null
     }, 
     function(error, response, body) {
       if (error)

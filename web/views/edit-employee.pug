@@ -1,7 +1,8 @@
 extends layout
 
 block content
-  h1 Add Employee
+  h1(id='page-title')
+  +spinner('load-indicator', false, true)
   form(id='form', onsubmit='return false')
     table(class='layout-table')
       tbody
