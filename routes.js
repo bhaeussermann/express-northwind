@@ -19,7 +19,8 @@ router.get('/employees/*', function(req, res, next) {
 });
 
 router.all('/api/*', function(req, res) {
-  request('http://23.96.23.19:8030' + req.url.substring(4), 
+  console.log(req.url.replace(/^\/api\/northwind/, ''));
+  request('https://northwind-express-api.herokuapp.com' + req.url.replace(/^\/api\/northwind/, ''),
     { 
       method: req.method, 
       body: (req.method === 'POST' || req.method === 'PUT') ? JSON.stringify(req.body) : null
